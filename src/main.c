@@ -33,6 +33,19 @@ int main() {
             command[len - 1] = '\0';
         }
 
+        if (strcmp(command, "sample;") == 0) {
+            free_db(&db);
+            init_db(&db);
+            example_db_data(&db);
+            // Iterate over tables and print their contents
+            for (int i = 0; i < 2; i++) {
+                char buffer[1024];
+                table_to_string(&db.tables[i], buffer, sizeof(buffer), 50);
+                printf("\nTable: %s\n%s\n", db.tables[i].name, buffer);
+            }
+            continue;
+        }
+
         if (strcmp(command, "exit;") == 0) {
             break;
         }
