@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Iinclude
 
-SRC = src/main.c src/commands.c src/db.c
+SRC = src/main.c src/commands.c src/db.c src/utils.c src/table.c
 OBJ = $(SRC:.c=.o)
 TARGET = app
 
