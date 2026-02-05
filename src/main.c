@@ -43,6 +43,7 @@ int main() {
                 table_to_string(&db.tables[i], buffer, sizeof(buffer), 50);
                 printf("\nTable: %s\n%s\n", db.tables[i].name, buffer);
             }
+            printf("\n");
             continue;
         }
 
@@ -50,7 +51,7 @@ int main() {
             break;
         }
 
-        char* result = handle_command(command, &db);
+        const char* result = handle_command(command, &db);
         printf("%s\n", result);
     }
 

@@ -6,17 +6,31 @@ Quick start: just run `make`.
     
 Example usage:
 
-    $ make
-    gcc -Wall -Wextra -Iinclude -c src/db.c -o src/db.o
-    gcc src/main.o src/commands.o src/db.o -o app
-    $ ./app
-    _____ _             ____  ____  __  __ ____  
-    |_   _(_)_ __  _   _|  _ \| __ )|  \/  / ___| 
-        | | | | '_ \| | | | | | | |_ \| |\/| \___ \ 
-        | | | | | | | |_| | |_| | |_) | |  | |___) |
-        |_| |_|_| |_|\__, |____/|____/|_|  |_|____/ 
-                    |___/                            
+```
+$ make
+gcc src/main.o src/commands.o src/db.o src/utils.o src/table.o -o app
+$ ./app
+   _____ _             ____  ____  __  __ ____  
+  |_   _(_)_ __  _   _|  _ \| __ )|  \/  / ___| 
+    | | | | '_ \| | | | | | | |_ \| |\/| \___ \ 
+    | | | | | | | |_| | |_| | |_) | |  | |___) |
+    |_| |_|_| |_|\__, |____/|____/|_|  |_|____/ 
+                 |___/                            
 
-    Welcome to the TinyDBMS!
-    TinyDBMS> exit
-    Exiting TinyDBMS. Goodbye!
+Welcome to the TinyDBMS!
+Type your commands below. End each command with a semicolon (;).
+Main commands: SELECT, INSERT, UPDATE, DELETE, CREATE, DROP.
+Other commands: 'exit;' to quit the program. 'sample;' to clear db and add sample data.
+TinyDBMS> sample;
+
+Table: Clients
+1,Alice
+2,Bob
+
+Table: Orders
+101,1
+102,2
+
+TinyDBMS> exit;
+Exiting TinyDBMS. Goodbye!
+```
