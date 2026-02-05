@@ -34,3 +34,31 @@ Table: Orders
 TinyDBMS> exit;
 Exiting TinyDBMS. Goodbye!
 ```
+
+## Roadmap
+
+### 1. Handling simple `SELECT` (and test build system)
+
+Goal statements to be parsed:
+
+```
+SELECT
+    customers.country,
+FROM customers
+JOIN orders ON orders.customer_id = c.id
+WHERE orders.status = 'PAID';
+```
+
+### 2. Group by `SELECT`
+
+```
+SELECT
+    c.country,
+    COUNT(o.id) AS order_count,
+    SUM(o.total_amount) AS revenue
+FROM customers c
+JOIN orders o ON o.customer_id = c.id
+WHERE o.status = 'PAID'
+GROUP BY c.country
+HAVING SUM(o.total_amount) > 50000;
+```

@@ -1,17 +1,28 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude
+CFLAGS = -Wall -Wextra -Iinclude -std=c11
 
-SRC = src/main.c src/commands.c src/db.c src/utils.c src/table.c
-OBJ = $(SRC:.c=.o)
-TARGET = app
+SRC := $(wildcard src/*.c)
+OBJ := $(patsubst src/%.c, build/obj/%.o, $(SRC))
 
-all: $(TARGET)
+TEST_SRC := $(wildcard tests/*.c)
+TEST_BIN := build/tests/run_tests
 
-$(TARGET): $(OBJ)
-	$(CC) $(OBJ) -o $(TARGET)
+.PHONY: all test clean
 
-%.o: %.c
+all: $(OBJ)
+
+build/obj:
+	mkdir -p build/obj
+
+build/tests:
+	mkdir -p build/tests
+
+build/obj/%.o: src/%.c | build/obj
 	$(CC) $(CFLAGS) -c $< -o $@
 
+test: $(OBJ) $(TEST_SRC) | build/tests
+	$(CC) $(CFLAGS) $(TEST_SRC) $(OBJ) -o $(TEST_BIN)
+	./$(TEST_BIN)
+
 clean:
-	rm -f $(OBJ) $(TARGET)
+	rm -rf build
