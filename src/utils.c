@@ -32,7 +32,6 @@ int starts_with(const char* str, const char* prefix) {
 
 char **split_string(const char *str, char delimiter, int *count) {
     char **result = NULL;
-    printf ("Splitting string: %s by delimiter: %c\n", str, delimiter);
     if (!count) {
         return NULL;
     }
@@ -44,7 +43,6 @@ char **split_string(const char *str, char delimiter, int *count) {
     if (!temp) {
         return NULL;
     }
-    printf("Temporary string for tokenization: %s\n", temp);
     char delim[2] = { delimiter, '\0' };
     char *token;
     int tokens = 0;
