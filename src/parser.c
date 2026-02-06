@@ -109,7 +109,7 @@ Token* parse_query(const char* query, Schema* schemas, int schema_count) {
 
         Token* token = malloc(sizeof(Token));
         token->type = token_type;
-        token->value = strdup(word);
+        token->value = string_duplicate(word);
         token->children = NULL;
         token->children_count = 0;
 
@@ -157,21 +157,43 @@ Token* parse_query(const char* query, Schema* schemas, int schema_count) {
     return root;
 }
 
+static char *string_duplicate(const char *str) {
+    if (!str) {
+        return NULL;
+    }
+    size_t length = strlen(str) + 1;
+    char *copy = malloc(length);
+    if (!copy) {
+        return NULL;
+    }
+    memcpy(copy, str, length);
+    return copy;
+}
+
 void token_to_string(Token* token, char* buffer, size_t buffer_size, int indent_level) {
-    if (!token || !buffer) return;
+    if (!token || !buffer || buffer_size == 0) return;
+    if (indent_level == 0) {
+        buffer[0] = '\0';
+    }
 
     const char* type_str = token_type_to_string(token->type);
 
     char indent[64] = {0};
-    for (int i = 0; i < indent_level && i < sizeof(indent) - 1; i++) {
+    for (int i = 0; i < indent_level && (size_t)i < sizeof(indent) - 1; i++) {
         strcat(indent, "  ");
     }
 
-    snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), "%s%s", indent, type_str);
+    size_t buffer_len = strlen(buffer);
+    if (buffer_len >= buffer_size - 1) return;
+    snprintf(buffer + buffer_len, buffer_size - buffer_len, "%s%s", indent, type_str);
     if (token->value) {
-        snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), "(%s)", token->value);
+        buffer_len = strlen(buffer);
+        if (buffer_len >= buffer_size - 1) return;
+        snprintf(buffer + buffer_len, buffer_size - buffer_len, "(%s)", token->value);
     }
-    snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), "\n");
+    buffer_len = strlen(buffer);
+    if (buffer_len >= buffer_size - 1) return;
+    snprintf(buffer + buffer_len, buffer_size - buffer_len, "\n");
 
     for (int i = 0; i < token->children_count; i++) {
         token_to_string(token->children[i], buffer, buffer_size, indent_level + 1);
