@@ -1,36 +1,19 @@
 #include "table.h"
 
-const char* convert_data_type_to_string(const char* data, DataType data_type, size_t cell_size) {
-    if (data_type == TYPE_INT) {
-        static char buffer[32];
-        snprintf(buffer, sizeof(buffer), "%d", *(int*)data);
-        return buffer;
-    } else if (data_type == TYPE_FLOAT) {
-        static char buffer[32];
-        snprintf(buffer, sizeof(buffer), "%.2f", *(float*)data);
-        return buffer;
-    } else if (data_type == TYPE_STRING) {
-        static char buffer[256];
-        snprintf(buffer, sizeof(buffer), "%.*s", (int)cell_size, data);
-        return buffer;
-    }
-    return "";
-}
-
 void add_column(Table* table, const char* column_name, DataType data_type) {
     // Check if the table doesn't have a column with the same name
-    for (int i = 0; i < table->column_count; i++) {
-        if (strcmp(table->columns[i].name, column_name) == 0) {
+    for (int i = 0; i < table->schema.column_count; i++) {
+        if (strcmp(table->schema.columns[i].name, column_name) == 0) {
             // Column with the same name exists, do not add
             return;
         }
     }
 
-    table->columns = realloc(table->columns, sizeof(Column) * (table->column_count + 1));
-    table->columns[table->column_count].name = strdup(column_name);
-    table->columns[table->column_count].type = data_type;
-    table->columns[table->column_count].id = table->column_count;
-    table->column_count++;
+    table->schema.columns = realloc(table->schema.columns, sizeof(Column) * (table->schema.column_count + 1));
+    table->schema.columns[table->schema.column_count].name = strdup(column_name);
+    table->schema.columns[table->schema.column_count].type = data_type;
+    table->schema.columns[table->schema.column_count].id = table->schema.column_count;
+    table->schema.column_count++;
 }
 
 void add_row(Table* table, Row row) {
@@ -43,8 +26,8 @@ void table_to_string(const Table* table, char* buffer, size_t buffer_size, size_
     size_t used = 0;
 
     for (int i = 0; i < table->row_count; i++) {
-        for (int j = 0; j < table->column_count; j++) {
-            DataType data_type = table->columns[j].type;
+        for (int j = 0; j < table->schema.column_count; j++) {
+            DataType data_type = table->schema.columns[j].type;
             const char* value = convert_data_type_to_string(
                 (const char*)table->rows[i].values[j], data_type, cell_size
             );
@@ -55,7 +38,7 @@ void table_to_string(const Table* table, char* buffer, size_t buffer_size, size_
             }
             used += written;
 
-            if (j < table->column_count - 1) {
+            if (j < table->schema.column_count - 1) {
                 if (used < buffer_size - 1) {
                     buffer[used++] = ',';
                 } else {
