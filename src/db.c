@@ -4,15 +4,15 @@
 
 void example_db_data(DB* db) {
     // Populate the database with example data: Clients and Orders tables
-    Table clients_table = {0};
+    Schema clients_table = {0};
     clients_table.name = "Clients";
-    Table orders_table = {0};
+    Schema orders_table = {0};
     orders_table.name = "Orders";
 
     // Add both tables to the database
     db->tables = (Table*)malloc(2 * sizeof(Table));
-    db->tables[0] = clients_table;
-    db->tables[1] = orders_table;
+    db->tables[0] = (Table){.schema = clients_table, .rows = NULL, .row_count = 0};
+    db->tables[1] = (Table){.schema = orders_table, .rows = NULL, .row_count = 0};
 
     // Add columns and rows to Clients table
     add_column(&db->tables[0], "ID", TYPE_INT);

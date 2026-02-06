@@ -1,30 +1,14 @@
 #ifndef TABLE_H
 #define TABLE_H
 
-#include <stddef.h> // For size_t
-
-typedef enum {
-    TYPE_INT,
-    TYPE_FLOAT,
-    TYPE_STRING
-} DataType;
-
-const char* convert_data_type_to_string(const char* data, DataType data_type, size_t cell_size);
-
-typedef struct {
-    int id;
-    char* name;
-    DataType type;
-} Column;
+#include "schema.h" // For Schema
 
 typedef struct {
     void** values; // Array of pointers to hold values of different types
 } Row;
 
 typedef struct {
-    char* name;
-    Column* columns;
-    int column_count;
+    Schema schema;
     Row* rows;
     int row_count;
 } Table;
